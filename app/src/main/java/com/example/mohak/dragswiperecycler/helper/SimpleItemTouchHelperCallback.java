@@ -37,7 +37,8 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter mAdapter;
 
-    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
+    public SimpleItemTouchHelperCallback
+            (ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
     }
 

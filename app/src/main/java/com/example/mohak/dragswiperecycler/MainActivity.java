@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = (RecyclerView) findViewById(R.id.recylerView);
-        Adapter adapter = new Adapter(this,getdata());
+        Adapter adapter = new Adapter(this, getdata());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
@@ -46,9 +46,8 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<single> getdata() {
 
         ArrayList<single> data = new ArrayList<>();
-        String [] arr2 = {"item 1","item 2","item 3","item 4","item 5","item 6", "item 7"};
-        for (int i = 0 ; i<arr2.length ; i++)
-        {
+        String[] arr2 = {"item 1", "item 2", "item 3", "item 4", "item 5", "item 6", "item 7"};
+        for (int i = 0; i < arr2.length; i++) {
             single c = new single(arr2[i]);
             data.add(c);
         }
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> implements ItemTouchHelperAdapter{
+    public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> implements ItemTouchHelperAdapter {
         Context context;
         ArrayList<single> Single;
 
@@ -106,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
 
-        class MyViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder{
+
+
+        class MyViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
 
             TextView textView;
 
@@ -123,12 +124,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClear() {
-                itemView.setBackgroundColor(0);
+                itemView.setBackgroundColor(1);
             }
         }
     }
-
-
 
 
 }
