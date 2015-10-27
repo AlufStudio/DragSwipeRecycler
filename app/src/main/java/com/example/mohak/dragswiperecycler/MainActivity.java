@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mohak.dragswiperecycler.helper.ItemTouchHelperAdapter;
 import com.example.mohak.dragswiperecycler.helper.ItemTouchHelperViewHolder;
@@ -38,9 +41,11 @@ public class MainActivity extends AppCompatActivity {
         Adapter adapter = new Adapter(this, getdata());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter, this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
+
+
     }
 
     public ArrayList<single> getdata() {
@@ -92,30 +97,36 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onItemMove(int fromPosition, int toPosition) {
+
             Collections.swap(Single, fromPosition, toPosition);
             notifyItemMoved(fromPosition, toPosition);
             return true;
         }
 
-        @Override
-        public void onItemDismiss(int position) {
 
+        @Override
+        public void onItemDismiss(int position, int direction) {
             Single.remove(position);
             notifyItemRemoved(position);
             notifyDataSetChanged();
         }
 
+//        @Override
+//        public void displace(int x1, int x2, RecyclerView.ViewHolder viewHolder) {
+//            viewHolder.itemView.;
+//        }
 
 
         class MyViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
 
             TextView textView;
+            CardView cardView;
 
             public MyViewHolder(View itemView) {
                 super(itemView);
                 textView = (TextView) itemView.findViewById(R.id.textView);
+                cardView = (CardView) itemView.findViewById(R.id.view);
             }
-
 
             @Override
             public void onItemSelected() {
@@ -124,7 +135,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClear() {
-                itemView.setBackgroundColor(1);
+
+                itemView.setBackgroundColor(0);
+
             }
         }
     }

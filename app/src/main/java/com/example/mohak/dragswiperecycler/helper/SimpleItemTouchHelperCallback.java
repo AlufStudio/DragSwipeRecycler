@@ -16,10 +16,14 @@
 
 package com.example.mohak.dragswiperecycler.helper;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
 
 /**
  * An implementation of {@link ItemTouchHelper.Callback} that enables basic drag & drop and
@@ -34,12 +38,14 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     public static final float ALPHA_FULL = 1.0f;
+    Context context;
 
     private final ItemTouchHelperAdapter mAdapter;
 
     public SimpleItemTouchHelperCallback
-            (ItemTouchHelperAdapter adapter) {
+            (ItemTouchHelperAdapter adapter, Context context) {
         mAdapter = adapter;
+        this.context = context;
     }
 
     @Override
@@ -52,6 +58,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         return true;
     }
 
+
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         // Set movement flags based on the layout manager
@@ -60,9 +67,10 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             final int swipeFlags = 0;
             return makeMovementFlags(dragFlags, swipeFlags);
         } else {
+            //swipe workd for left only if int swipeFlags = ItemTouchHelper.LEFT
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-            final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-            return makeMovementFlags(dragFlags,swipeFlags);
+            final int swipeFlags = ItemTouchHelper.LEFT;
+            return makeMovementFlags(dragFlags, swipeFlags);
         }
     }
 
@@ -78,15 +86,26 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
+    public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
+        //Returns the fraction that the user should move the View to be considered as swiped.
+        // The fraction is calculated with respect to RecyclerView's bounds.
+        //   Default value is .5f, which means, to swipe a View, user must move the View at least half of RecyclerView's width or height, depending on the swipe direction.
+        return 0.5f;
+    }
+
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         // Notify the adapter of the dismissal
-        mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+        mAdapter.onItemDismiss(viewHolder.getAdapterPosition(), direction);
+
     }
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             // Fade out the view as it is swiped out of the parent's bounds
+
             final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
             viewHolder.itemView.setAlpha(alpha);
             viewHolder.itemView.setTranslationX(dX);
@@ -121,4 +140,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             itemViewHolder.onItemClear();
         }
     }
+
+
 }
